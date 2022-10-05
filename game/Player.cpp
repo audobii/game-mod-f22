@@ -1077,6 +1077,8 @@ idPlayer::idPlayer
 ==============
 */
 idPlayer::idPlayer() {
+	//initialize player stuff here
+
 	memset( &usercmd, 0, sizeof( usercmd ) );
 
 	alreadyDidTeamAnnouncerSound = false;
@@ -1342,6 +1344,9 @@ idPlayer::idPlayer() {
 	teamAmmoRegenPending	= false;
 	teamDoubler			= NULL;		
 	teamDoublerPending		= false;
+
+	playerElementResistance = "fire";
+	playerElementWeakness = "lightning";
 }
 
 /*

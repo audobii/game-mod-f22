@@ -2590,8 +2590,20 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 	}
 	
 	// The attack is either a hitscan or a launched projectile, do that now.
+	//this runs when you shoot with a weapon
 	if ( !gameLocal.isClient ) {
 		idDict& dict = altAttack ? attackAltDict : attackDict;
+
+		idStr playerElementRes = owner->playerElementResistance;
+
+		if (!idStr::Icmp(playerElementRes, "fire")) {
+			gameLocal.Printf("you are resistant to fire :)\n");
+		}
+		else {
+			gameLocal.Printf("you are NOT resistant to fire :(\n");
+		}
+
+		gameLocal.Printf("test\n");
 		power *= owner->PowerUpModifier( PMOD_PROJECTILE_DAMAGE );
 		if ( altAttack ? wfl.attackAltHitscan : wfl.attackHitscan ) {
 			Hitscan( dict, muzzleOrigin, muzzleAxis, num_attacks, spread, power );
