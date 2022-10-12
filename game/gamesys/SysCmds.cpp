@@ -555,6 +555,45 @@ void Cmd_Give_f( const idCmdArgs &args ) {
 }
 // RITUAL END
 
+void PlayerEquip(idPlayer* player, const char* name)
+{
+	int	i;
+
+	if (!player || !name) {
+		return;
+	}
+
+	else if (idStr::Icmp(name, "armor") == 0) {
+		player->SetPlayerResistance("rock");
+		player->SetPlayerWeakness("lightning");
+	}
+
+	else if (idStr::Icmp(name, "robe") == 0) {
+		player->SetPlayerResistance("ice");
+		player->SetPlayerWeakness("fire");
+	}
+
+	else if (idStr::Icmp(name, "cloak") == 0) {
+		player->SetPlayerResistance("fire");
+		player->SetPlayerWeakness("ice");
+	}
+
+	else {
+		gameLocal.Printf("unknown item of clothing\n");
+	}
+}
+
+void Cmd_Equip_f(const idCmdArgs& args) {
+	idPlayer* player;
+
+	player = gameLocal.GetLocalPlayer();
+	if (!player || !gameLocal.CheatsOk()) {
+		return;
+	}
+
+	PlayerEquip(player, args.Argv(1));
+}
+
 /*
 ==================
 Cmd_CenterView_f
@@ -2412,6 +2451,19 @@ static void Cmd_GameError_f( const idCmdArgs &args ) {
 	gameLocal.Error( "game error" );
 }
 
+//CODE FROM CLASS, thanks dj!
+static void Cmd_Locate_f(const idCmdArgs& args) {
+	idPlayer* player = NULL; 
+
+	player = gameLocal.GetLocalPlayer();
+	if (!player) {
+		return;
+	}
+
+	idVec3 origin = player->GetPhysics()->GetOrigin();
+	gameLocal.Printf("location: (%f,%f,%f)", origin[0], origin[1], origin[2]);
+}
+
 // RAVEN BEGIN
 // rjohnson: entity usage stats
 /*
@@ -3232,6 +3284,9 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand( "buyMenu",				Cmd_ToggleBuyMenu_f,		CMD_FL_GAME,				"Toggle buy menu (if in a buy zone and the game type supports it)" );
 	cmdSystem->AddCommand( "buy",					Cmd_BuyItem_f,				CMD_FL_GAME,				"Buy an item (if in a buy zone and the game type supports it)" );
 // RITUAL END
+
+	cmdSystem->AddCommand("locate", Cmd_Locate_f, CMD_FL_GAME, "print out location of player to console");
+	cmdSystem->AddCommand("equip", Cmd_Equip_f, CMD_FL_GAME | CMD_FL_CHEAT, "equip robe/armor/cloak to give player different weakness/resistance");
 
 }
 

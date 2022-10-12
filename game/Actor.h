@@ -411,6 +411,12 @@ protected:
 	void					DisableAnimState		( int channel );
 	void					EnableAnimState			( int channel );
 	idAnimState&			GetAnimState			( int channel );
+public:
+	idStr elementResistance;
+	idStr elementWeakness;
+
+	idStr	GetElementResistance(void) const;
+	idStr	GetElementWeakness(void) const;
 };
 
 ID_INLINE bool idActor::IsInVehicle( void ) const {
@@ -419,6 +425,14 @@ ID_INLINE bool idActor::IsInVehicle( void ) const {
 
 ID_INLINE rvVehicleController& idActor::GetVehicleController( void ) {
 	return vehicleController;
+}
+
+ID_INLINE idStr idActor::GetElementResistance(void) const {
+	return elementResistance;
+}
+
+ID_INLINE idStr idActor::GetElementWeakness(void) const {
+	return elementWeakness;
 }
 
 #endif /* !__GAME_ACTOR_H__ */

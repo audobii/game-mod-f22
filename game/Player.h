@@ -1160,6 +1160,12 @@ public:
 	idStr playerElementResistance;
 	idStr playerElementWeakness;
 
+	idStr GetPlayerResistance (void) const;
+	void SetPlayerResistance (idStr newRes);
+
+	idStr GetPlayerWeakness(void) const;
+	void SetPlayerWeakness(idStr newWeak);
+
 };
 
 ID_INLINE bool idPlayer::IsBeingTalkedTo( void ) {
@@ -1330,6 +1336,22 @@ ID_INLINE int idPlayer::GetArena( void ) const {
 
 ID_INLINE bool idPlayer::CanFire( void ) const {
 	return flagCanFire;
+}
+
+ID_INLINE idStr idPlayer::GetPlayerResistance(void) const {
+	return playerElementResistance;
+}
+
+ID_INLINE void idPlayer::SetPlayerResistance(idStr newRes) {
+	playerElementResistance = newRes;
+}
+
+ID_INLINE idStr idPlayer::GetPlayerWeakness(void) const {
+	return playerElementWeakness;
+}
+
+ID_INLINE void idPlayer::SetPlayerWeakness(idStr newWeak) {
+	playerElementWeakness = newWeak;
 }
 
 #endif /* !__GAME_PLAYER_H__ */
