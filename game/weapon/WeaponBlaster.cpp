@@ -53,6 +53,7 @@ rvWeaponBlaster::rvWeaponBlaster
 ================
 */
 rvWeaponBlaster::rvWeaponBlaster ( void ) {
+	weaponElementType = "ice";
 }
 
 /*

@@ -713,6 +713,10 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
  		return true;
  	}
  
+	// TODO:
+	// check elemental affinity of entity
+	// then inc/dec dmg based on projectile elemental type...?
+	
 	// get the entity the projectile collided with
 	ent = gameLocal.entities[ collision.c.entityNum ];
 	if ( ent == owner.GetEntity() ) {

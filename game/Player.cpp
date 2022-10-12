@@ -4935,6 +4935,7 @@ void idPlayer::UpdatePowerUps( void ) {
 // RITUAL END
 	}
 
+	//TODO: look at this for mana regen pickups?
 	// Regenerate ammo
 	if( gameLocal.isServer && PowerUpActive( POWERUP_AMMOREGEN ) ) {
 		for( int i = 0; i < MAX_WEAPONS; i++ ) {

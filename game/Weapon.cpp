@@ -2603,7 +2603,9 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 			gameLocal.Printf("you are NOT resistant to fire :(\n");
 		}
 
-		gameLocal.Printf("test\n");
+		gameLocal.Printf("this weapon's element type is: \n");
+		gameLocal.Printf(weaponElementType);
+		
 		power *= owner->PowerUpModifier( PMOD_PROJECTILE_DAMAGE );
 		if ( altAttack ? wfl.attackAltHitscan : wfl.attackHitscan ) {
 			Hitscan( dict, muzzleOrigin, muzzleAxis, num_attacks, spread, power );
