@@ -555,6 +555,9 @@ void Cmd_Give_f( const idCmdArgs &args ) {
 }
 // RITUAL END
 
+
+//"equip" a different item of clothing/gear 
+//changes player's resistance/weakness
 void PlayerEquip(idPlayer* player, const char* name)
 {
 	int	i;

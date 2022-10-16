@@ -2595,16 +2595,19 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 		idDict& dict = altAttack ? attackAltDict : attackDict;
 
 		idStr playerElementRes = owner->playerElementResistance;
+		idStr playerElementWk = owner->playerElementWeakness;
 
-		if (!idStr::Icmp(playerElementRes, "fire")) {
-			gameLocal.Printf("you are resistant to fire :)\n");
-		}
-		else {
-			gameLocal.Printf("you are NOT resistant to fire :(\n");
-		}
+		gameLocal.Printf("the player is resistant to: \n");
+		gameLocal.Printf(playerElementRes);
+		gameLocal.Printf("\n");
+
+		gameLocal.Printf("the player is weak to: \n");
+		gameLocal.Printf(playerElementWk);
+		gameLocal.Printf("\n");
 
 		gameLocal.Printf("this weapon's element type is: \n");
 		gameLocal.Printf(weaponElementType);
+		gameLocal.Printf("\n");
 		
 		power *= owner->PowerUpModifier( PMOD_PROJECTILE_DAMAGE );
 		if ( altAttack ? wfl.attackAltHitscan : wfl.attackHitscan ) {
