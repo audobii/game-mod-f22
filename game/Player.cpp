@@ -1347,6 +1347,7 @@ idPlayer::idPlayer() {
 
 	playerElementResistance = "fire";
 	playerElementWeakness = "lightning";
+	playerDmgType = "fire";
 }
 
 /*

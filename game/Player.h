@@ -1159,12 +1159,16 @@ private:
 public:
 	idStr playerElementResistance;
 	idStr playerElementWeakness;
+	idStr playerDmgType; //change based on current weapon?
 
 	idStr GetPlayerResistance (void) const;
 	void SetPlayerResistance (idStr newRes);
 
 	idStr GetPlayerWeakness(void) const;
 	void SetPlayerWeakness(idStr newWeak);
+
+	idStr GetPlayerDmgType(void) const;
+	void SetPlayerDmgType(idStr newDmgType);
 
 };
 
@@ -1352,6 +1356,14 @@ ID_INLINE idStr idPlayer::GetPlayerWeakness(void) const {
 
 ID_INLINE void idPlayer::SetPlayerWeakness(idStr newWeak) {
 	playerElementWeakness = newWeak;
+}
+
+ID_INLINE idStr idPlayer::GetPlayerDmgType(void) const {
+	return playerDmgType;
+}
+
+ID_INLINE void idPlayer::SetPlayerDmgType(idStr newDmgType) {
+	playerDmgType = newDmgType;
 }
 
 #endif /* !__GAME_PLAYER_H__ */

@@ -414,9 +414,11 @@ protected:
 public:
 	idStr elementResistance;
 	idStr elementWeakness;
+	idStr dmgType; //what damage the actor DEALS
 
 	idStr	GetElementResistance(void) const;
 	idStr	GetElementWeakness(void) const;
+	idStr	GetDamageType(void) const;
 };
 
 ID_INLINE bool idActor::IsInVehicle( void ) const {
@@ -433,6 +435,10 @@ ID_INLINE idStr idActor::GetElementResistance(void) const {
 
 ID_INLINE idStr idActor::GetElementWeakness(void) const {
 	return elementWeakness;
+}
+
+ID_INLINE idStr idActor::GetDamageType(void) const {
+	return dmgType;
 }
 
 #endif /* !__GAME_ACTOR_H__ */

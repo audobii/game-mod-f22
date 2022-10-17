@@ -82,6 +82,7 @@ rvMonsterStroggMarine::rvMonsterStroggMarine ( ) {
 	nextShootTime = 0;
 	elementResistance = "fire";
 	elementWeakness = "ice";
+	dmgType = "fire";
 }
 
 void rvMonsterStroggMarine::InitSpawnArgsVariables( void )

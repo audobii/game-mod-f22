@@ -895,6 +895,48 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 				}
 			}	
 // RAVEN END
+
+			//testing wk/res - player to enemy
+			if (ent->IsType(idActor::GetClassType()) && owner.GetEntity()->IsType(idPlayer::GetClassType())) {
+				idActor* entActor = static_cast<idActor*>(ent);
+				idStr entRes = entActor->GetElementResistance();
+				idStr entWk = entActor->GetElementWeakness();
+				idStr dmgType = entActor->GetDamageType();
+
+				idPlayer* player = static_cast<idPlayer*>(owner.GetEntity());
+				idStr playerRes = player->GetPlayerResistance();
+				idStr playerWk = player->GetPlayerWeakness();
+				idStr playerDmgType = player->GetPlayerDmgType();
+
+				if (!idStr::Icmp(playerDmgType, entWk)) { 
+					damagePower *= 2.0f;
+				} else if (!idStr::Icmp(playerDmgType, entRes)) {
+					damagePower /= 2.0f;
+				}
+
+			}
+
+			//enemy to player
+			if (ent->IsType(idPlayer::GetClassType()) && owner.GetEntity()->IsType(idActor::GetClassType())) {
+				idActor* entActor = static_cast<idActor*>(owner.GetEntity());
+				idStr entRes = entActor->GetElementResistance();
+				idStr entWk = entActor->GetElementWeakness();
+				idStr dmgType = entActor->GetDamageType();
+
+				idPlayer* player = static_cast<idPlayer*>(ent);
+				idStr playerRes = player->GetPlayerResistance();
+				idStr playerWk = player->GetPlayerWeakness();
+				idStr playerDmgType = player->GetPlayerDmgType();
+
+				if (!idStr::Icmp(dmgType, playerWk)) {
+					damagePower *= 2.0f;
+				}
+				else if (!idStr::Icmp(dmgType, playerRes)) {
+					damagePower /= 2.0f;
+				}
+
+			}
+
  			ent->Damage( this, owner, dir, damageDefName, damagePower, hitJoint );
 			
 			if( owner && owner->IsType( idPlayer::GetClassType() ) && ent->IsType( idActor::GetClassType() ) ) {
