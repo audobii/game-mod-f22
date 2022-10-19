@@ -399,6 +399,10 @@ rvWeaponBlaster::State_Fire
 ================
 */
 stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
+
+	int currSpellQueue = owner->GetSpellQueue();
+	idStr firstElement = owner->GetFirstElement();
+
 	enum {
 		FIRE_INIT,
 		FIRE_WAIT,
@@ -426,16 +430,68 @@ stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 			}
 
 
-	
+			/*
 			if ( gameLocal.time - fireHeldTime > chargeTime ) {	
+				//charged atk
+				
 				Attack ( true, 1, spread, 0, 1.0f );
 				PlayEffect ( "fx_chargedflash", barrelJointView, false );
 				PlayAnim( ANIMCHANNEL_ALL, "chargedfire", parms.blendFrames );
+
+				gameLocal.Printf("\ncharge super fire??");
+
 			} else {
 				Attack ( false, 1, spread, 0, 1.0f );
 				PlayEffect ( "fx_normalflash", barrelJointView, false );
 				PlayAnim( ANIMCHANNEL_ALL, "fire", parms.blendFrames );
+
+				gameLocal.Printf("\ncharge fire");
 			}
+			*/
+
+			if (currSpellQueue == 0) { //first slot in queue
+				//update gui, add 1 to spellQueue, set first element in queue
+				owner->SetSpellQueue(1);
+				owner->SetFirstElement(weaponElementType);
+				gameLocal.Printf("\nqueueing ice element");
+			}
+			else if (currSpellQueue == 1) { //second slot in queue
+				//update gui, reset spellQueue to 0
+				//set playerdmgtype to the element
+				//do special spell stuff + damage
+				owner->SetSpellQueue(0);
+				owner->SetFirstElement("");
+
+				//TEMP - might wanna do some other system
+				owner->SetPlayerDmgType(weaponElementType);
+
+				//TODO:
+				//keep track of first element
+				//based on that - do different effects
+				//CASE SWITCH WOULD BE BETTER HERE BUT I CANT FIGURE IT OUT RN
+
+				if (!idStr::Icmp(firstElement, "ice")) {
+					//TEMP - just fire after clicking twice
+					Attack(false, 1, spread, 0, 1.0f);
+					PlayEffect("fx_normalflash", barrelJointView, false);
+					PlayAnim(ANIMCHANNEL_ALL, "fire", parms.blendFrames);
+				} else if (!idStr::Icmp(firstElement, "fire")) {
+					//maybe fizzle out if fire? incompatible?
+
+				} else if (!idStr::Icmp(firstElement, "lightning")) {
+
+
+				} else if (!idStr::Icmp(firstElement, "rock")) {
+					//hail effect?
+
+				}
+				else {
+					gameLocal.Printf("uh oh");
+				}
+
+				gameLocal.Printf("\nfiring spell");
+			}
+
 			fireHeldTime = 0;
 			
 			return SRESULT_STAGE(FIRE_WAIT);

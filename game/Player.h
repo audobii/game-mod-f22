@@ -1170,6 +1170,21 @@ public:
 	idStr GetPlayerDmgType(void) const;
 	void SetPlayerDmgType(idStr newDmgType);
 
+	//for keeping track of spell queue
+	//cast spell (at second input)
+	//at second element:
+	//reset spellQueue to 0
+	//set playerdmgtype to the element
+	//do special spell stuff + damage
+	int spellQueue;
+	idStr firstElement;
+
+	int GetSpellQueue(void) const;
+	void SetSpellQueue(int newNum);
+
+	idStr GetFirstElement(void) const;
+	void SetFirstElement(idStr newElement);
+
 };
 
 ID_INLINE bool idPlayer::IsBeingTalkedTo( void ) {
@@ -1365,6 +1380,23 @@ ID_INLINE idStr idPlayer::GetPlayerDmgType(void) const {
 ID_INLINE void idPlayer::SetPlayerDmgType(idStr newDmgType) {
 	playerDmgType = newDmgType;
 }
+
+ID_INLINE int idPlayer::GetSpellQueue(void) const {
+	return spellQueue;
+}
+
+ID_INLINE void idPlayer::SetSpellQueue(int newNum) {
+	spellQueue = newNum;
+}
+
+ID_INLINE idStr idPlayer::GetFirstElement(void) const {
+	return firstElement;
+}
+
+ID_INLINE void idPlayer::SetFirstElement(idStr newElement) {
+	firstElement = newElement;
+}
+
 
 #endif /* !__GAME_PLAYER_H__ */
 

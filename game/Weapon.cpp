@@ -2594,21 +2594,15 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 	if ( !gameLocal.isClient ) {
 		idDict& dict = altAttack ? attackAltDict : attackDict;
 
-		idStr playerElementRes = owner->playerElementResistance;
-		idStr playerElementWk = owner->playerElementWeakness;
+		//idStr playerElementRes = owner->playerElementResistance;
+		//idStr playerElementWk = owner->playerElementWeakness;
 
-		gameLocal.Printf("the player is resistant to: \n");
-		gameLocal.Printf(playerElementRes);
-		gameLocal.Printf("\n");
-
-		gameLocal.Printf("the player is weak to: \n");
-		gameLocal.Printf(playerElementWk);
-		gameLocal.Printf("\n");
-
+		/*
 		gameLocal.Printf("this weapon's element type is: \n");
 		gameLocal.Printf(weaponElementType);
 		gameLocal.Printf("\n");
-		
+		*/
+
 		power *= owner->PowerUpModifier( PMOD_PROJECTILE_DAMAGE );
 		if ( altAttack ? wfl.attackAltHitscan : wfl.attackHitscan ) {
 			Hitscan( dict, muzzleOrigin, muzzleAxis, num_attacks, spread, power );

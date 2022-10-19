@@ -1348,6 +1348,8 @@ idPlayer::idPlayer() {
 	playerElementResistance = "fire";
 	playerElementWeakness = "lightning";
 	playerDmgType = "fire";
+	spellQueue = 0;
+	firstElement = "";
 }
 
 /*
@@ -11483,6 +11485,7 @@ idPlayer::Event_SelectWeapon
 ==================
 */
 void idPlayer::Event_SelectWeapon( const char *weaponName ) {
+	gameLocal.Printf("hi im selecting a weapon");
 	int i;
 	int weaponNum;
 
