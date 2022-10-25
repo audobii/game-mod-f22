@@ -1350,6 +1350,8 @@ idPlayer::idPlayer() {
 	playerDmgType = "fire";
 	spellQueue = 0;
 	firstElement = "";
+
+	this->GiveItem("weapon_dmg");
 }
 
 /*

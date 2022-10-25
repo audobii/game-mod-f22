@@ -67,7 +67,9 @@ END_CLASS
 WeaponNapalmGun::WeaponNapalmGun
 ================
 */
-WeaponNapalmGun::WeaponNapalmGun( void ) { }
+WeaponNapalmGun::WeaponNapalmGun( void ) {
+	weaponElementType = "fire";
+}
 
 /*
 ================

@@ -489,6 +489,9 @@ rvWeapon::rvWeapon ( void ) {
 	hitscanAttackDef = -1;
 	
 	forceGUIReload = false;
+
+	maxMana = 100;
+	currentMana = 100;
 }
 
 /*
@@ -653,7 +656,7 @@ void rvWeapon::Spawn ( void ) {
  	muzzleOffset		= weaponDef->dict.GetFloat ( "muzzleOffset", "14" );
 
 	// Ammo
-	clipSize			= spawnArgs.GetInt( "clipSize" );
+	clipSize			= maxMana; //spawnArgs.GetInt( "clipSize" );
 	ammoRequired		= spawnArgs.GetInt( "ammoRequired" );
 	lowAmmo				= spawnArgs.GetInt( "lowAmmo" );
 	ammoType			= GetAmmoIndexForName( spawnArgs.GetString( "ammoType" ) );
@@ -2367,9 +2370,11 @@ rvWeapon::AmmoInClip
 ================
 */
 int rvWeapon::AmmoInClip( void ) const {
-	if ( !clipSize ) {
+	
+	if (!clipSize) {
 		return AmmoAvailable();
 	}
+	
 	return ammoClip;
 }
 
@@ -2526,6 +2531,9 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 		owner->inventory.UseAmmo( ammoType, ammoRequired );
 		if ( clipSize && ammoRequired ) {
  			clipPredictTime = gameLocal.time;	// mp client: we predict this. mark time so we're not confused by snapshots
+
+			//currentMana -= 10;
+			//ammoClip = currentMana;
 			ammoClip -= 1;
 		}
 

@@ -103,6 +103,7 @@ rvWeaponLightningGun::rvWeaponLightningGun
 ================
 */
 rvWeaponLightningGun::rvWeaponLightningGun( void ) {
+	weaponElementType = "lightning";
 }
 
 /*

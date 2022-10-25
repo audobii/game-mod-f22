@@ -94,6 +94,7 @@ rvWeaponNailgun::rvWeaponNailgun
 ================
 */
 rvWeaponNailgun::rvWeaponNailgun ( void ) {
+	weaponElementType = "rock";
 }
 
 /*

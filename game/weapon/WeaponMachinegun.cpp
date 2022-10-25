@@ -231,8 +231,7 @@ stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 	};	
 	switch ( parms.stage ) {
 		case STAGE_INIT:
-
-			/*
+			
 			if ( wsfl.zoom ) {
 				nextAttackTime = gameLocal.time + (altFireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
 				Attack ( true, 1, spreadZoom, 0, 1.0f );
@@ -242,8 +241,8 @@ stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 				Attack ( false, 1, spread, 0, 1.0f );
 			}
 			PlayAnim ( ANIMCHANNEL_ALL, "fire", 0 );
-			*/
-
+			
+			/*
 			owner->SetSpellQueue(0);
 			owner->SetFirstElement("");
 
@@ -256,10 +255,14 @@ stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 				gameLocal.Printf("\nqueueing rock element");
 			}
 			else if (currSpellQueue == 1) {
+				owner->SetSpellQueue(0);
+				owner->SetFirstElement("");
+
+				//TEMP - might wanna do some other system
+				owner->SetPlayerDmgType(weaponElementType);
+
 				if (!idStr::Icmp(firstElement, "ice")) {
-					nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier(PMOD_FIRERATE));
-					Attack(false, 1, spread, 0, 1.0f);
-					PlayAnim(ANIMCHANNEL_ALL, "fire", 0);
+					
 					gameLocal.Printf("\n1st element was ice");
 				}
 				else if (!idStr::Icmp(firstElement, "fire")) {
@@ -270,16 +273,16 @@ stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 
 				}
 				else if (!idStr::Icmp(firstElement, "rock")) {
-					nextAttackTime = gameLocal.time + (altFireRate * owner->PowerUpModifier(PMOD_FIRERATE));
-					Attack(true, 1, spreadZoom, 0, 1.0f);
-					fireHeld = true;
+					nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier(PMOD_FIRERATE));
+					Attack(false, 1, spread, 0, 1.0f);
+					PlayAnim(ANIMCHANNEL_ALL, "fire", 0);
 					gameLocal.Printf("\n1st element was rock");
 				}
 				else {
 					gameLocal.Printf("uh oh");
 				}
 			}
-
+			*/
 			return SRESULT_STAGE ( STAGE_WAIT );
 	
 		case STAGE_WAIT:		
