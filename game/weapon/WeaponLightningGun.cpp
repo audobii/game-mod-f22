@@ -256,12 +256,12 @@ rvWeaponLightningGun::Think
 ================
 */
 void rvWeaponLightningGun::Think ( void ) {
+	
 	trace_t	  tr;
 
 	rvWeapon::Think();
 
 	UpdateTubes();
-
 	// If no longer firing or out of ammo then nothing to do in the think
 	if ( !wsfl.attack || !IsReady() || !AmmoAvailable() ) {
 		if ( trailEffectView ) {
@@ -318,10 +318,13 @@ void rvWeaponLightningGun::Think ( void ) {
 		dir.Normalize ( );
 		
 		nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
-		Attack ( currentPath.target, dir, power );
+		//gameLocal.Printf("\nqueueing element - " + weaponElementType);
+		//Attack ( currentPath.target, dir, power );
+		/*
 		for ( i = 0; i < chainLightning.Num(); i ++, power *= 0.75f ) {
 			Attack ( chainLightning[i].target, chainLightning[i].normal, power );
 		}
+		*/
 
 		statManager->WeaponFired( owner, owner->GetCurrentWeapon(), chainLightning.Num() + 1 );
 	}
@@ -330,6 +333,7 @@ void rvWeaponLightningGun::Think ( void ) {
 	if ( gameLocal.time > nextCrawlTime ) {
 		nextCrawlTime = gameLocal.time + SEC2MS(spawnArgs.GetFloat ( "crawlDelay", ".3" ));
 	}
+	
 }
 
 /*
@@ -818,6 +822,8 @@ stateResult_t rvWeaponLightningGun::State_Fire( const stateParms_t& parms ) {
 	};	
 	switch ( parms.stage ) {
 		case STAGE_INIT:
+			//gameLocal.Printf("\nqueueing element - " + weaponElementType);
+			/*
 			StartSound( "snd_fire", SND_CHANNEL_WEAPON, 0, false, NULL );
 			StartSound( "snd_fire_stereo", SND_CHANNEL_ITEM, 0, false, NULL );
 			StartSound( "snd_fire_loop", SND_CHANNEL_BODY2, 0, false, NULL );
@@ -832,6 +838,9 @@ stateResult_t rvWeaponLightningGun::State_Fire( const stateParms_t& parms ) {
   			}
 
 			PlayAnim( ANIMCHANNEL_ALL, "shoot_start", parms.blendFrames );
+			*/
+
+			queueElement(weaponElementType);
 			return SRESULT_STAGE( STAGE_ATTACKLOOP );
 		
 		case STAGE_ATTACKLOOP:
@@ -871,7 +880,9 @@ stateResult_t rvWeaponLightningGun::State_Fire( const stateParms_t& parms ) {
 			}
 			return SRESULT_WAIT;
 	}
+	
 	return SRESULT_ERROR;
+	//return SRESULT_DONE;
 }
 
 

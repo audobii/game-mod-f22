@@ -440,6 +440,9 @@ public:
 	int maxMana;
 	//idStr weaponElementSubtype;
 
+	//idStr firstElement;
+	void queueElement(idStr element);
+
 };
 
 ID_INLINE rvViewWeapon* rvWeapon::GetViewModel ( void ) const {

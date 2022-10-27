@@ -1348,10 +1348,10 @@ idPlayer::idPlayer() {
 	playerElementResistance = "fire";
 	playerElementWeakness = "lightning";
 	playerDmgType = "fire";
-	spellQueue = 0;
+
+	//spellQueue = 0;
 	firstElement = "";
 
-	this->GiveItem("weapon_dmg");
 }
 
 /*
@@ -14090,3 +14090,20 @@ int idPlayer::CanSelectWeapon(const char* weaponName)
 }
 
 // RITUAL END
+
+void idPlayer::UpdateSpellQueueGui(idStr update) {
+
+
+	if (hud) {
+
+		if (!idStr::Icmp(update, "first")) {
+			hud->HandleNamedEvent("queueFirstSpell");
+		}
+		else if (!idStr::Icmp(update, "second")) {
+			hud->HandleNamedEvent("queueSecondSpell");
+		}
+		else if (!idStr::Icmp(update, "clear")) {
+			hud->HandleNamedEvent("clearSpellQueue");
+		}
+	}
+}

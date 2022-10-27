@@ -419,6 +419,9 @@ public:
 	idStr	GetElementResistance(void) const;
 	idStr	GetElementWeakness(void) const;
 	idStr	GetDamageType(void) const;
+
+	bool stunned;
+	bool slowed;
 };
 
 ID_INLINE bool idActor::IsInVehicle( void ) const {

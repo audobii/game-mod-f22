@@ -222,8 +222,8 @@ rvWeaponMachinegun::State_Fire
 */
 stateResult_t rvWeaponMachinegun::State_Fire ( const stateParms_t& parms ) {
 
-	int currSpellQueue = owner->GetSpellQueue();
-	idStr firstElement = owner->GetFirstElement();
+	//int currSpellQueue = owner->GetSpellQueue();
+	//idStr firstElement = owner->GetFirstElement();
 
 	enum {
 		STAGE_INIT,
