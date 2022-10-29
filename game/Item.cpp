@@ -953,6 +953,11 @@ idItem::Event_Touch
 ================
 */
 void idItem::Event_Touch( idEntity *other, trace_t *trace ) {
+	gameLocal.Printf("i have been touched\n");
+
+	if (!idStr::Icmp(spawnArgs.GetString("magic_effect"), "restore mana")) {
+		gameLocal.Printf("\nthis is for restoring mana :)");
+	}
 // RAVEN BEGIN
 // jnewquist: Use accessor for static class type 
 	if ( !other->IsType( idPlayer::GetClassType() ) ) {
@@ -973,6 +978,7 @@ idItem::Event_Trigger
 ================
 */
 void idItem::Event_Trigger( idEntity *activator ) {
+	gameLocal.Printf("item trigger?\n");
 	if ( !canPickUp && spawnArgs.GetBool( "triggerFirst" ) ) {
 		canPickUp = true;
 		return;
