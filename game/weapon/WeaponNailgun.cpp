@@ -94,6 +94,7 @@ rvWeaponNailgun::rvWeaponNailgun
 ================
 */
 rvWeaponNailgun::rvWeaponNailgun ( void ) {
+	weaponElementType = "rock";
 }
 
 /*
@@ -644,6 +645,7 @@ stateResult_t rvWeaponNailgun::State_Fire( const stateParms_t& parms ) {
 	};	
 	switch ( parms.stage ) {
 		case STAGE_INIT:
+			/*
 			if ( !wsfl.attack ) {
 				SetState ( "Idle", parms.blendFrames );				
 				return SRESULT_DONE;
@@ -653,7 +655,10 @@ stateResult_t rvWeaponNailgun::State_Fire( const stateParms_t& parms ) {
 				return SRESULT_DONE;
 			}
 			nextAttackTime = gameLocal.time;
+			*/
+			//gameLocal.Printf("\nqueueing element - " + weaponElementType);
 			
+			queueElement(weaponElementType);
 			return SRESULT_STAGE ( STAGE_FIRE );
 			
 		case STAGE_FIRE:

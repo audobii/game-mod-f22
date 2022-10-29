@@ -400,8 +400,8 @@ rvWeaponBlaster::State_Fire
 */
 stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 
-	int currSpellQueue = owner->GetSpellQueue();
-	idStr firstElement = owner->GetFirstElement();
+	//int currSpellQueue = owner->GetSpellQueue();
+	//idStr firstElement = owner->GetFirstElement();
 
 	enum {
 		FIRE_INIT,
@@ -429,8 +429,6 @@ stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 				return SRESULT_DONE;
 			}
 
-
-			/*
 			if ( gameLocal.time - fireHeldTime > chargeTime ) {	
 				//charged atk
 				
@@ -447,8 +445,8 @@ stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 
 				gameLocal.Printf("\ncharge fire");
 			}
-			*/
-
+			
+			/*
 			if (currSpellQueue == 0) { //first slot in queue
 				//update gui, add 1 to spellQueue, set first element in queue
 				owner->SetSpellQueue(1);
@@ -491,6 +489,7 @@ stateResult_t rvWeaponBlaster::State_Fire ( const stateParms_t& parms ) {
 
 				gameLocal.Printf("\nfiring spell");
 			}
+			*/
 
 			fireHeldTime = 0;
 			

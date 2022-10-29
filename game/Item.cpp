@@ -578,6 +578,7 @@ void idItem::GetAttributes( idDict &attributes ) {
 	}
 }
 
+//maybe here?
 /*
 ================
 idItem::GiveToPlayer
@@ -625,12 +626,14 @@ void idItem::SendPickupMsg( int clientNum ) {
 	gameLocal.SendUnreliableMessagePVS( msg, this, itemPVSArea );	
 }
 
+//PICKUPS HERE
 /*
 ================
 idItem::Pickup
 ================
 */
 bool idItem::Pickup( idPlayer *player ) {
+	gameLocal.Printf("i have been picked up");
 	//dropped weapon?
 	bool dropped = spawnArgs.GetBool( "dropped" );
 
@@ -965,6 +968,7 @@ void idItem::Event_Touch( idEntity *other, trace_t *trace ) {
 	}
 
 	Pickup( static_cast<idPlayer *>(other) );
+	gameLocal.Printf("\nplayer touched pickup");
 }
 
 /*

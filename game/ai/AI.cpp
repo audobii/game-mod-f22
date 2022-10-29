@@ -139,6 +139,9 @@ idAI::idAI ( void ) {
 	actionAnimNum	= 0;
 	actionSkipTime	= 0;
 	actionTime		= 0;
+
+	stunned = false;
+	slowed = false;
 }
 
 /*
@@ -1137,6 +1140,9 @@ idAI::Think
 */
 void idAI::Think( void ) {
 
+	//CHECK STATUS OF MONSTER HERE?
+	//if stunned/slowed... do something here
+
 	// if we are completely closed off from the player, don't do anything at all
 	if ( CheckDormant() ) {
 		return;
@@ -1243,6 +1249,16 @@ void idAI::Think( void ) {
 	if ( ai_speeds.GetBool ( ) ) {
 		aiManager.timerThink.Stop ( );
 	}
+
+	//status effects
+	if (stunned) {
+		StopMove(MOVE_STATUS_DONE);
+	}
+
+	if (slowed) {
+		Event_SetMoveSpeed(AIMOVESPEED_WALK);
+	}
+
 }
 
 /*

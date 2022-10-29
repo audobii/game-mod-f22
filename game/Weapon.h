@@ -436,7 +436,12 @@ private:
 
 public:
 	idStr weaponElementType;
+	int currentMana;
+	int maxMana;
 	//idStr weaponElementSubtype;
+
+	//idStr firstElement;
+	void queueElement(idStr element);
 
 };
 

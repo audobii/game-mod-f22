@@ -67,7 +67,9 @@ END_CLASS
 WeaponNapalmGun::WeaponNapalmGun
 ================
 */
-WeaponNapalmGun::WeaponNapalmGun( void ) { }
+WeaponNapalmGun::WeaponNapalmGun( void ) {
+	weaponElementType = "fire";
+}
 
 /*
 ================
@@ -387,12 +389,14 @@ WeaponNapalmGun::State_Fire
 ================
 */
 stateResult_t WeaponNapalmGun::State_Fire( const stateParms_t& parms ) {
+
 	enum {
 		STAGE_INIT,
 		STAGE_WAIT,
 	};	
 	switch ( parms.stage ) {
 		case STAGE_INIT:
+			/*
 			if ( wsfl.zoom ) {
 				nextAttackTime = gameLocal.time + (altFireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
 				Attack ( true, 1, spread, 0, 1.0f );
@@ -411,8 +415,13 @@ stateResult_t WeaponNapalmGun::State_Fire( const stateParms_t& parms ) {
 
 				PlayAnim ( ANIMCHANNEL_ALL, "fire", parms.blendFrames );
 			}
-
+			*/
 			previousAmmo = AmmoInClip();
+			
+
+			//gameLocal.Printf("\nqueueing element - " + weaponElementType);
+			queueElement(weaponElementType);
+
 			return SRESULT_STAGE ( STAGE_WAIT );
 	
 		case STAGE_WAIT:			

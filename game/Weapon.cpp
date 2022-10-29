@@ -489,6 +489,11 @@ rvWeapon::rvWeapon ( void ) {
 	hitscanAttackDef = -1;
 	
 	forceGUIReload = false;
+
+	maxMana = 100;
+	currentMana = 100;
+
+	//firstElement = "";
 }
 
 /*
@@ -653,18 +658,18 @@ void rvWeapon::Spawn ( void ) {
  	muzzleOffset		= weaponDef->dict.GetFloat ( "muzzleOffset", "14" );
 
 	// Ammo
-	clipSize			= spawnArgs.GetInt( "clipSize" );
+	clipSize			= 100; //spawnArgs.GetInt( "clipSize" );
 	ammoRequired		= spawnArgs.GetInt( "ammoRequired" );
-	lowAmmo				= spawnArgs.GetInt( "lowAmmo" );
+	lowAmmo				= spawnArgs.GetInt("lowAmmo");
 	ammoType			= GetAmmoIndexForName( spawnArgs.GetString( "ammoType" ) );
-	maxAmmo				= owner->inventory.MaxAmmoForAmmoClass ( owner, GetAmmoNameForIndex ( ammoType ) );
+	maxAmmo				= 100; //owner->inventory.MaxAmmoForAmmoClass ( owner, GetAmmoNameForIndex ( ammoType ) );
 	
 	if ( ( ammoType < 0 ) || ( ammoType >= MAX_AMMO ) ) {
 		gameLocal.Warning( "Unknown ammotype for class '%s'", this->GetClassname ( ) );
 	}
 
 	// If the weapon has a clip, then fill it up
- 	ammoClip = owner->inventory.clip[weaponIndex];
+	ammoClip = maxMana; //owner->inventory.clip[weaponIndex];
  	if ( ( ammoClip < 0 ) || ( ammoClip > clipSize ) ) {
  		// first time using this weapon so have it fully loaded to start
  		ammoClip = clipSize;
@@ -2367,9 +2372,11 @@ rvWeapon::AmmoInClip
 ================
 */
 int rvWeapon::AmmoInClip( void ) const {
-	if ( !clipSize ) {
+	
+	if (!clipSize) {
 		return AmmoAvailable();
 	}
+	
 	return ammoClip;
 }
 
@@ -2526,6 +2533,9 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 		owner->inventory.UseAmmo( ammoType, ammoRequired );
 		if ( clipSize && ammoRequired ) {
  			clipPredictTime = gameLocal.time;	// mp client: we predict this. mark time so we're not confused by snapshots
+
+			//currentMana -= 10;
+			//ammoClip = currentMana;
 			ammoClip -= 1;
 		}
 
@@ -3343,3 +3353,83 @@ void rvWeapon::GetDebugInfo ( debugInfoProc_t proc, void* userData ) {
 	idClass::GetDebugInfo ( proc, userData );
 	proc ( "rvWeapon", "state",	stateThread.GetState()?stateThread.GetState()->state->name : "<none>", userData );
 }
+
+
+//spell queueing function
+void rvWeapon::queueElement(idStr element) {
+
+	idStr firstElement = owner->GetFirstElement();
+
+	if (!idStr::Icmp(firstElement, "")) { //nothing in queue
+		owner->UpdateSpellQueueGui("clear");
+		owner->UpdateSpellQueueGui("first");
+
+		owner->SetFirstElement(element);
+
+		gameLocal.Printf("\nqueueing 1st element! - " + firstElement);
+	}
+	else { //something in queue - cast spell
+		owner->UpdateSpellQueueGui("second");
+		
+		idStr secondElement = element;
+
+		//i am very sorry for this
+		if (!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "fire")) {
+			owner->SetPlayerDmgType("fire");
+			//do dmg
+			gameLocal.Printf("\nFIREBALL");
+		}
+		else if (!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "ice")) {
+			owner->SetPlayerDmgType("ice");
+			//do dmg
+			gameLocal.Printf("\nSNOWBALL");
+		}
+		else if (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "lightning")) {
+			owner->SetPlayerDmgType("ice");
+			//do dmg
+			gameLocal.Printf("\nLIGHTNING BOLT");
+		}
+		else if (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "rock")) {
+			owner->inventory.armor = 50;
+			gameLocal.Printf("\nSHIELD");
+		}
+		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "fire")) || (!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "ice"))) {
+			owner->health += 10;
+			gameLocal.Printf("\nHEALING WATER");
+		}
+		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "rock")) || (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "ice"))) {
+			owner->SetPlayerDmgType("ice");
+			//do dmg
+			gameLocal.Printf("\nHAIL");
+		}
+		else if ((!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "rock")) || (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "fire"))) {
+			owner->SetPlayerDmgType("rock");
+			//do dmg
+			gameLocal.Printf("\nMETEOR");
+		}
+		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "ice"))) {
+			owner->SetPlayerDmgType("lightning");
+			//do dmg
+			gameLocal.Printf("\nSTORM (PUSH)");
+		}
+		else if ((!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "fire"))) {
+			owner->SetPlayerDmgType("fire");
+			//do dmg
+			gameLocal.Printf("\nBOOMBOOM");
+		} 
+		else if ((!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "rock"))) {
+			//pull
+			gameLocal.Printf("\nMAGNET (PULL)");
+		}
+
+		gameLocal.Printf("\ncasting spell, 2nd element is " + secondElement);
+
+		owner->SetFirstElement("");
+	}
+
+	//FOR THE EFFECTS
+	//animation - ur gonna have to just copy the code and apply it to here. maybe make functions for the effects u want
+	//damage - drill down from Attack() --> Projectile --> Damage() ...follow this logic and implement here. maybe call them directly under the spells
+
+}
+

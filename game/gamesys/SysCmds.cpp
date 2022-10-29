@@ -569,16 +569,19 @@ void PlayerEquip(idPlayer* player, const char* name)
 	else if (idStr::Icmp(name, "armor") == 0) {
 		player->SetPlayerResistance("rock");
 		player->SetPlayerWeakness("lightning");
+		player->hud->HandleNamedEvent("showMessageArmor");
 	}
 
 	else if (idStr::Icmp(name, "robe") == 0) {
 		player->SetPlayerResistance("ice");
 		player->SetPlayerWeakness("fire");
+		player->hud->HandleNamedEvent("showMessageCloak");
 	}
 
 	else if (idStr::Icmp(name, "cloak") == 0) {
 		player->SetPlayerResistance("fire");
 		player->SetPlayerWeakness("ice");
+		player->hud->HandleNamedEvent("showMessageRobe");
 	}
 
 	else {
