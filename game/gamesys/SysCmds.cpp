@@ -600,6 +600,51 @@ void Cmd_Equip_f(const idCmdArgs& args) {
 	PlayerEquip(player, args.Argv(1));
 }
 
+void Cmd_MagicPickup_f(const idCmdArgs& args) {
+	//
+
+	//TODO: edit to spawn item/pickup instead?
+
+	const char* key, * value;
+	int			i;
+	float		yaw;
+	idVec3		org;
+	idPlayer* player;
+	idDict		dict;
+
+	player = gameLocal.GetLocalPlayer();
+	if (!player || !gameLocal.CheatsOk(false)) {
+		return;
+	}
+
+	yaw = player->viewAngles.yaw;
+
+	//change this?
+	value = "item_mana_pack";
+	dict.Set("classname", value);
+	dict.Set("angle", va("%f", yaw + 180));
+
+	org = player->GetPhysics()->GetOrigin() + idAngles(0, yaw, 0).ToForward() * 80 + idVec3(0, 0, 1);
+	dict.Set("origin", org.ToString());
+
+	for (i = 2; i < args.Argc() - 1; i += 2) {
+
+		key = args.Argv(i);
+		value = args.Argv(i + 1);
+
+		dict.Set(key, value);
+	}
+
+	// RAVEN BEGIN
+	// kfuller: want to know the name of the entity I spawned
+	idEntity* newEnt = NULL;
+	gameLocal.SpawnEntityDef(dict, &newEnt);
+
+	if (newEnt) {
+		gameLocal.Printf("spawned entity '%s'\n", newEnt->name.c_str());
+	}
+}
+
 /*
 ==================
 Cmd_CenterView_f
@@ -3293,7 +3338,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 
 	cmdSystem->AddCommand("locate", Cmd_Locate_f, CMD_FL_GAME, "print out location of player to console");
 	cmdSystem->AddCommand("equip", Cmd_Equip_f, CMD_FL_GAME | CMD_FL_CHEAT, "equip robe/armor/cloak to give player different weakness/resistance");
-
+	cmdSystem->AddCommand("summonPickup", Cmd_MagicPickup_f, CMD_FL_GAME, "spawn magical pickup in front of player");
 }
 
 /*

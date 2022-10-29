@@ -633,7 +633,7 @@ idItem::Pickup
 ================
 */
 bool idItem::Pickup( idPlayer *player ) {
-	gameLocal.Printf("i have been picked up");
+	//gameLocal.Printf("i have been picked up");
 	//dropped weapon?
 	bool dropped = spawnArgs.GetBool( "dropped" );
 
@@ -956,6 +956,11 @@ idItem::Event_Touch
 ================
 */
 void idItem::Event_Touch( idEntity *other, trace_t *trace ) {
+	gameLocal.Printf("\nitem is touched");
+
+	if (!idStr::Icmp(spawnArgs.GetString("magic_effect"), "restore mana")) {
+		gameLocal.Printf("\nthis is for restoring mana :)");
+	}
 // RAVEN BEGIN
 // jnewquist: Use accessor for static class type 
 	if ( !other->IsType( idPlayer::GetClassType() ) ) {
@@ -968,7 +973,7 @@ void idItem::Event_Touch( idEntity *other, trace_t *trace ) {
 	}
 
 	Pickup( static_cast<idPlayer *>(other) );
-	gameLocal.Printf("\nplayer touched pickup");
+	//gameLocal.Printf("\nplayer touched pickup");
 }
 
 /*
@@ -977,6 +982,7 @@ idItem::Event_Trigger
 ================
 */
 void idItem::Event_Trigger( idEntity *activator ) {
+	gameLocal.Printf("item trigger?\n");
 	if ( !canPickUp && spawnArgs.GetBool( "triggerFirst" ) ) {
 		canPickUp = true;
 		return;
