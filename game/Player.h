@@ -1160,6 +1160,7 @@ public:
 	idStr playerElementResistance;
 	idStr playerElementWeakness;
 	idStr playerDmgType; //change based on current weapon?
+	idStr currSpellBoost; //change based on pickup effect
 
 	idStr GetPlayerResistance (void) const;
 	void SetPlayerResistance (idStr newRes);
@@ -1171,6 +1172,9 @@ public:
 	void SetPlayerDmgType(idStr newDmgType);
 
 	void UpdateSpellQueueGui(idStr update) ;
+
+	idStr GetPlayerBoost(void) const;
+	void SetPlayerBoost(idStr newBoost);
 
 	/*
 	//for keeping track of spell queue
@@ -1402,6 +1406,14 @@ ID_INLINE idStr idPlayer::GetFirstElement(void) const {
 
 ID_INLINE void idPlayer::SetFirstElement(idStr newElement) {
 	firstElement = newElement;
+}
+
+ID_INLINE idStr idPlayer::GetPlayerBoost(void) const {
+	return currSpellBoost;
+}
+
+ID_INLINE void idPlayer::SetPlayerBoost(idStr newBoost) {
+	currSpellBoost = newBoost;
 }
 
 #endif /* !__GAME_PLAYER_H__ */

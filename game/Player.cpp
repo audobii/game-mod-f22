@@ -1352,6 +1352,8 @@ idPlayer::idPlayer() {
 	//spellQueue = 0;
 	firstElement = "";
 
+	currSpellBoost = "";
+
 }
 
 /*
