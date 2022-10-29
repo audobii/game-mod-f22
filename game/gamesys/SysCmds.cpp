@@ -617,10 +617,15 @@ void Cmd_MagicPickup_f(const idCmdArgs& args) {
 		return;
 	}
 
+	if (args.Argc() & 1) {	// must always have an even number of arguments
+		gameLocal.Printf("usage: spawn classname [key/value pairs]\n");
+		return;
+	}
+
 	yaw = player->viewAngles.yaw;
 
 	//change this?
-	value = "item_mana_pack";
+	value = args.Argv(1);
 	dict.Set("classname", value);
 	dict.Set("angle", va("%f", yaw + 180));
 

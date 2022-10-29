@@ -634,6 +634,28 @@ idItem::Pickup
 */
 bool idItem::Pickup( idPlayer *player ) {
 	//gameLocal.Printf("i have been picked up");
+	
+	//check to see what kind of pickup it is, perform correct action
+	if (!idStr::Icmp(spawnArgs.GetString("magic_effect", ""), "restore mana")) {
+		gameLocal.Printf("\nthis is for restoring mana :)");
+	}
+	if (!idStr::Icmp(spawnArgs.GetString("magic_effect", ""), "rock boost")) {
+		gameLocal.Printf("\nthis is for boosting rock element");
+		player->SetPlayerBoost("rock");
+	}
+	if (!idStr::Icmp(spawnArgs.GetString("magic_effect", ""), "fire boost")) {
+		gameLocal.Printf("\nthis is for boosting fire element");
+		player->SetPlayerBoost("fire");
+	}
+	if (!idStr::Icmp(spawnArgs.GetString("magic_effect", ""), "ice boost")) {
+		gameLocal.Printf("\nthis is for boosting ice element");
+		player->SetPlayerBoost("ice");
+	}
+	if (!idStr::Icmp(spawnArgs.GetString("magic_effect", ""), "lightning boost")) {
+		gameLocal.Printf("\nthis is for boosting lightning element");
+		player->SetPlayerBoost("lightning");
+	}
+
 	//dropped weapon?
 	bool dropped = spawnArgs.GetBool( "dropped" );
 
@@ -958,9 +980,6 @@ idItem::Event_Touch
 void idItem::Event_Touch( idEntity *other, trace_t *trace ) {
 	gameLocal.Printf("\nitem is touched");
 
-	if (!idStr::Icmp(spawnArgs.GetString("magic_effect"), "restore mana")) {
-		gameLocal.Printf("\nthis is for restoring mana :)");
-	}
 // RAVEN BEGIN
 // jnewquist: Use accessor for static class type 
 	if ( !other->IsType( idPlayer::GetClassType() ) ) {

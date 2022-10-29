@@ -3359,6 +3359,7 @@ void rvWeapon::GetDebugInfo ( debugInfoProc_t proc, void* userData ) {
 void rvWeapon::queueElement(idStr element) {
 
 	idStr firstElement = owner->GetFirstElement();
+	idStr currElementBoost = owner->GetPlayerBoost();
 
 	if (!idStr::Icmp(firstElement, "")) { //nothing in queue
 		owner->UpdateSpellQueueGui("clear");
@@ -3390,7 +3391,12 @@ void rvWeapon::queueElement(idStr element) {
 			gameLocal.Printf("\nLIGHTNING BOLT");
 		}
 		else if (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "rock")) {
-			owner->inventory.armor = 50;
+			if (!idStr::Icmp(currElementBoost, "rock")) {
+				owner->inventory.armor = 75;
+			}
+			else {
+				owner->inventory.armor = 50;
+			}
 			gameLocal.Printf("\nSHIELD");
 		}
 		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "fire")) || (!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "ice"))) {
