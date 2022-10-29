@@ -3370,7 +3370,7 @@ void rvWeapon::queueElement(idStr element) {
 	}
 	else { //something in queue - cast spell
 		owner->UpdateSpellQueueGui("second");
-
+		
 		idStr secondElement = element;
 
 		//i am very sorry for this
@@ -3426,6 +3426,10 @@ void rvWeapon::queueElement(idStr element) {
 
 		owner->SetFirstElement("");
 	}
+
+	//FOR THE EFFECTS
+	//animation - ur gonna have to just copy the code and apply it to here. maybe make functions for the effects u want
+	//damage - drill down from Attack() --> Projectile --> Damage() ...follow this logic and implement here. maybe call them directly under the spells
 
 }
 
