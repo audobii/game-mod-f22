@@ -1354,6 +1354,11 @@ idPlayer::idPlayer() {
 
 	currSpellBoost = "";
 
+	currentMana = 100;
+	maxMana = 100;
+
+	isManaRegen = false;
+	manaDelayTimer = 0;
 }
 
 /*
@@ -3446,6 +3451,7 @@ void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 
 	if ( weapon ) {
 		UpdateHudAmmo( _hud );
+		UpdateHudMana(_hud);
 	}
 	
 	_hud->StateChanged( gameLocal.time );
@@ -9656,6 +9662,18 @@ void idPlayer::Think( void ) {
 		inBuyZone = false;
 
 	inBuyZonePrev = false;
+
+	/*
+	manaDelayTimer += 1;
+
+	//idk what number to put here
+	if (manaDelayTimer = 1000000) {
+		manaDelayTimer = 0;
+		if (isManaRegen && currentMana < 100) {
+			currentMana += 1;
+		}
+	}
+	*/
 }
 
 /*
@@ -14108,4 +14126,41 @@ void idPlayer::UpdateSpellQueueGui(idStr update) {
 			hud->HandleNamedEvent("clearSpellQueue");
 		}
 	}
+}
+
+void idPlayer::UpdateHudMana(idUserInterface* _hud) {
+
+	assert(weapon);
+	assert(_hud);
+
+	_hud->SetStateInt("player_mana", currentMana);
+
+}
+
+//return true if it worked
+bool idPlayer::addMana(int mana) {
+	if (currentMana < maxMana) {
+		if (currentMana > maxMana - mana) {
+			currentMana = maxMana;
+		}
+		else {
+			currentMana += mana;
+		}
+		return true;
+	}
+	return false;
+}
+
+//return true if it worked
+bool idPlayer::depleteMana(int mana) {
+	if (currentMana > 0) {
+		if (currentMana < mana) {
+			return false;
+		}
+		else {
+			currentMana -= mana;
+			return true;
+		}
+	}
+	return false;
 }

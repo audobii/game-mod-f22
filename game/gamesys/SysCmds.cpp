@@ -570,18 +570,31 @@ void PlayerEquip(idPlayer* player, const char* name)
 		player->SetPlayerResistance("rock");
 		player->SetPlayerWeakness("lightning");
 		player->hud->HandleNamedEvent("showMessageArmor");
+		player->isManaRegen = false;
 	}
 
 	else if (idStr::Icmp(name, "robe") == 0) {
 		player->SetPlayerResistance("ice");
 		player->SetPlayerWeakness("fire");
 		player->hud->HandleNamedEvent("showMessageCloak");
+		player->isManaRegen = false;
 	}
 
 	else if (idStr::Icmp(name, "cloak") == 0) {
 		player->SetPlayerResistance("fire");
 		player->SetPlayerWeakness("ice");
 		player->hud->HandleNamedEvent("showMessageRobe");
+		player->isManaRegen = false;
+	}
+
+	else if (idStr::Icmp(name, "mana_ring") == 0) {
+		player->SetPlayerResistance("");
+		player->SetPlayerWeakness("rock");
+		player->hud->HandleNamedEvent("showMessageManaRing");
+		player->isManaRegen = true;
+		player->addMana(5);
+
+		//maybe something with SEC2MS(30.0f)??
 	}
 
 	else {
@@ -598,6 +611,17 @@ void Cmd_Equip_f(const idCmdArgs& args) {
 	}
 
 	PlayerEquip(player, args.Argv(1));
+}
+
+void Cmd_Queue_f(const idCmdArgs& args) {
+	idPlayer* player;
+
+	player = gameLocal.GetLocalPlayer();
+	if (!player || !gameLocal.CheatsOk()) {
+		return;
+	}
+
+	player->weapon->queueElement(args.Argv(1));
 }
 
 void Cmd_MagicPickup_f(const idCmdArgs& args) {
@@ -3344,6 +3368,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand("locate", Cmd_Locate_f, CMD_FL_GAME, "print out location of player to console");
 	cmdSystem->AddCommand("equip", Cmd_Equip_f, CMD_FL_GAME | CMD_FL_CHEAT, "equip robe/armor/cloak to give player different weakness/resistance");
 	cmdSystem->AddCommand("summonPickup", Cmd_MagicPickup_f, CMD_FL_GAME, "spawn magical pickup in front of player");
+	cmdSystem->AddCommand("queue", Cmd_Queue_f, CMD_FL_GAME | CMD_FL_CHEAT, "queue spell");
 }
 
 /*

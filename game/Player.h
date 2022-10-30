@@ -1193,6 +1193,18 @@ public:
 	idStr firstElement;
 	idStr GetFirstElement(void) const;
 	void SetFirstElement(idStr newElement);
+
+	void UpdateHudMana(idUserInterface* hud);
+
+	int currentMana;
+	int maxMana;
+
+	bool isManaRegen;
+	int manaDelayTimer;
+
+	bool addMana(int amount);
+	bool depleteMana(int amount);
+
 };
 
 ID_INLINE bool idPlayer::IsBeingTalkedTo( void ) {

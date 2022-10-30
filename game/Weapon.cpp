@@ -490,8 +490,8 @@ rvWeapon::rvWeapon ( void ) {
 	
 	forceGUIReload = false;
 
-	maxMana = 100;
-	currentMana = 100;
+	//maxMana = 100;
+	//currentMana = 100;
 
 	//firstElement = "";
 }
@@ -658,18 +658,19 @@ void rvWeapon::Spawn ( void ) {
  	muzzleOffset		= weaponDef->dict.GetFloat ( "muzzleOffset", "14" );
 
 	// Ammo
-	clipSize			= 100; //spawnArgs.GetInt( "clipSize" );
+	clipSize			= spawnArgs.GetInt( "clipSize" );
 	ammoRequired		= spawnArgs.GetInt( "ammoRequired" );
 	lowAmmo				= spawnArgs.GetInt("lowAmmo");
 	ammoType			= GetAmmoIndexForName( spawnArgs.GetString( "ammoType" ) );
-	maxAmmo				= 100; //owner->inventory.MaxAmmoForAmmoClass ( owner, GetAmmoNameForIndex ( ammoType ) );
+	maxAmmo				= owner->inventory.MaxAmmoForAmmoClass ( owner, GetAmmoNameForIndex ( ammoType ) );
 	
 	if ( ( ammoType < 0 ) || ( ammoType >= MAX_AMMO ) ) {
 		gameLocal.Warning( "Unknown ammotype for class '%s'", this->GetClassname ( ) );
 	}
 
 	// If the weapon has a clip, then fill it up
-	ammoClip = maxMana; //owner->inventory.clip[weaponIndex];
+	ammoClip = owner->inventory.clip[weaponIndex];
+	
  	if ( ( ammoClip < 0 ) || ( ammoClip > clipSize ) ) {
  		// first time using this weapon so have it fully loaded to start
  		ammoClip = clipSize;
@@ -2457,7 +2458,8 @@ rvWeapon::UseAmmo
 void rvWeapon::UseAmmo ( int amount ) {
 	owner->inventory.UseAmmo( ammoType, amount * ammoRequired );
 	if ( clipSize && ammoRequired ) {
-		ammoClip -= ( amount * ammoRequired );
+		//ammoClip -= ( amount * ammoRequired );
+		ammoClip -= 10;
 		if ( ammoClip < 0 ) {
 			ammoClip = 0;
 		}
@@ -2536,7 +2538,7 @@ void rvWeapon::Attack( bool altAttack, int num_attacks, float spread, float fuse
 
 			//currentMana -= 10;
 			//ammoClip = currentMana;
-			ammoClip -= 1;
+			ammoClip -= 10;
 		}
 
 		// wake up nearby monsters
@@ -3360,6 +3362,7 @@ void rvWeapon::queueElement(idStr element) {
 
 	idStr firstElement = owner->GetFirstElement();
 	idStr currElementBoost = owner->GetPlayerBoost();
+	int currMana = owner->currentMana;
 
 	if (!idStr::Icmp(firstElement, "")) { //nothing in queue
 		owner->UpdateSpellQueueGui("clear");
@@ -3369,7 +3372,7 @@ void rvWeapon::queueElement(idStr element) {
 
 		gameLocal.Printf("\nqueueing 1st element! - " + firstElement);
 	}
-	else { //something in queue - cast spell
+	else if(currMana > 0) { //something in queue - cast spell if mana available
 		owner->UpdateSpellQueueGui("second");
 		
 		idStr secondElement = element;
@@ -3391,16 +3394,27 @@ void rvWeapon::queueElement(idStr element) {
 			gameLocal.Printf("\nLIGHTNING BOLT");
 		}
 		else if (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "rock")) {
-			if (!idStr::Icmp(currElementBoost, "rock")) {
-				owner->inventory.armor = 75;
-			}
-			else {
-				owner->inventory.armor = 50;
+			if (owner->depleteMana(20)) {
+				if (!idStr::Icmp(currElementBoost, "rock")) {
+					owner->inventory.armor = 75;
+				}
+				else {
+					owner->inventory.armor = 50;
+				}
 			}
 			gameLocal.Printf("\nSHIELD");
 		}
 		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "fire")) || (!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "ice"))) {
-			owner->health += 10;
+			if (owner->depleteMana(20)) {
+				if (owner->health < 100) {
+					if (owner->health > 90) {
+						owner->health = 100;
+					}
+					else {
+						owner->health += 10;
+					}
+				}
+			}
 			gameLocal.Printf("\nHEALING WATER");
 		}
 		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "rock")) || (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "ice"))) {
@@ -3432,6 +3446,8 @@ void rvWeapon::queueElement(idStr element) {
 
 		owner->SetFirstElement("");
 	}
+
+	//owner->UpdateHudMana(owner->hud);
 
 	//FOR THE EFFECTS
 	//animation - ur gonna have to just copy the code and apply it to here. maybe make functions for the effects u want

@@ -638,6 +638,18 @@ bool idItem::Pickup( idPlayer *player ) {
 	//check to see what kind of pickup it is, perform correct action
 	if (!idStr::Icmp(spawnArgs.GetString("magic_effect", ""), "restore mana")) {
 		gameLocal.Printf("\nthis is for restoring mana :)");
+		player->addMana(10);
+		/*
+		if (player->currentMana < player->maxMana) {
+			if (player->currentMana > player->maxMana - 10) {
+				player->currentMana = player->maxMana;
+			}
+			else {
+				player->currentMana += 10;
+			}
+		}
+		*/
+		
 	}
 	if (!idStr::Icmp(spawnArgs.GetString("magic_effect", ""), "rock boost")) {
 		gameLocal.Printf("\nthis is for boosting rock element");

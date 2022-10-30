@@ -436,8 +436,8 @@ private:
 
 public:
 	idStr weaponElementType;
-	int currentMana;
-	int maxMana;
+	//int currentMana;
+	//int maxMana;
 	//idStr weaponElementSubtype;
 
 	//idStr firstElement;

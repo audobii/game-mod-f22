@@ -14154,3 +14154,12 @@ bool idPlayer::IsSpectatedClient( void ) const {
 	}
 	return false;
 }
+
+void idPlayer::UpdateHudMana(idUserInterface* _hud) {
+
+	assert(weapon);
+	assert(_hud);
+
+	_hud->SetStateInt("player_mana", 420);
+
+}
