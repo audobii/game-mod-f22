@@ -70,6 +70,9 @@ rvMonsterGunner::rvMonsterGunner
 */
 rvMonsterGunner::rvMonsterGunner ( ) {
 	nextShootTime = 0;
+	elementResistance = "fire";
+	elementWeakness = "ice";
+	dmgType = "fire";
 }
 
 

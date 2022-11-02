@@ -3489,7 +3489,7 @@ void rvWeapon::queueElement(idStr element) {
 		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "ice"))) {
 			if (owner->depleteMana(20)) {
 				owner->SetPlayerDmgType("lightning");
-				//do dmg
+				Attack(false, 30, 3, 0, 0.7f);
 			}
 			gameLocal.Printf("\nSTORM (PUSH)");
 		}
@@ -3503,9 +3503,10 @@ void rvWeapon::queueElement(idStr element) {
 		} 
 		else if ((!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "rock"))) {
 			if (owner->depleteMana(20)) {
-				//pull
-				gameLocal.Printf("\nMAGNET (PULL)");
+				Attack(false, 3, spread, 1, 1.0f);
 			}
+
+			gameLocal.Printf("\nMAGNET (PULL)");
 		}
 
 		gameLocal.Printf("\ncasting spell, 2nd element is " + secondElement);

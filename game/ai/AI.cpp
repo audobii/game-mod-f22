@@ -1264,7 +1264,7 @@ void idAI::Think( void ) {
 	}
 
 	if (burning) {
-		this->Event_SetHealth(health - 20);
+		this->Event_SetHealth(health - 50);
 		//DoT (hopefully)
 		
 	}

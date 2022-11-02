@@ -66,6 +66,9 @@ rvMonsterBerserker::rvMonsterBerserker
 rvMonsterBerserker::rvMonsterBerserker ( ) {
 	painConsecutive	= 0;
 	standingMeleeNoAttackTime = 0;
+	elementResistance = "lightning";
+	elementWeakness = "ice";
+	dmgType = "lightning";
 }
 
 /*

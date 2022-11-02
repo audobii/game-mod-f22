@@ -53,6 +53,9 @@ rvMonsterGrunt::rvMonsterGrunt
 */
 rvMonsterGrunt::rvMonsterGrunt ( void ) {
 	standingMeleeNoAttackTime = 0;
+	elementResistance = "rock";
+	elementWeakness = "lightning";
+	dmgType = "rock";
 }
 
 /*
