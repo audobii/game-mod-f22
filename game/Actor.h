@@ -422,6 +422,7 @@ public:
 
 	bool stunned;
 	bool slowed;
+	bool burning;
 };
 
 ID_INLINE bool idActor::IsInVehicle( void ) const {

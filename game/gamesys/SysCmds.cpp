@@ -624,6 +624,17 @@ void Cmd_Queue_f(const idCmdArgs& args) {
 	player->weapon->queueElement(args.Argv(1));
 }
 
+void Cmd_Toggle_Help_Menu_f(const idCmdArgs& args) {
+	idPlayer* player;
+
+	player = gameLocal.GetLocalPlayer();
+	if (!player || !gameLocal.CheatsOk()) {
+		return;
+	}
+
+	player->hud->HandleNamedEvent("toggleHelpMenu");
+}
+
 void Cmd_MagicPickup_f(const idCmdArgs& args) {
 	//
 
@@ -3369,6 +3380,7 @@ void idGameLocal::InitConsoleCommands( void ) {
 	cmdSystem->AddCommand("equip", Cmd_Equip_f, CMD_FL_GAME | CMD_FL_CHEAT, "equip robe/armor/cloak to give player different weakness/resistance");
 	cmdSystem->AddCommand("summonPickup", Cmd_MagicPickup_f, CMD_FL_GAME, "spawn magical pickup in front of player");
 	cmdSystem->AddCommand("queue", Cmd_Queue_f, CMD_FL_GAME | CMD_FL_CHEAT, "queue spell");
+	cmdSystem->AddCommand("toggle_help_menu", Cmd_Toggle_Help_Menu_f, CMD_FL_GAME | CMD_FL_CHEAT, "toggle the help menu");
 }
 
 /*

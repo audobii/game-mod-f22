@@ -914,6 +914,13 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 					damagePower /= 2.0f;
 				}
 
+				if (!idStr::Icmp(playerDmgType, "ice")) {
+					entActor->stunned = true;
+				}
+				if (!idStr::Icmp(playerDmgType, "fire")) {
+					entActor->burning = true;
+				}
+
 			}
 
 			//enemy to player

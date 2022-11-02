@@ -396,7 +396,7 @@ stateResult_t WeaponNapalmGun::State_Fire( const stateParms_t& parms ) {
 	};	
 	switch ( parms.stage ) {
 		case STAGE_INIT:
-			/*
+			
 			if ( wsfl.zoom ) {
 				nextAttackTime = gameLocal.time + (altFireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
 				Attack ( true, 1, spread, 0, 1.0f );
@@ -415,7 +415,7 @@ stateResult_t WeaponNapalmGun::State_Fire( const stateParms_t& parms ) {
 
 				PlayAnim ( ANIMCHANNEL_ALL, "fire", parms.blendFrames );
 			}
-			*/
+			
 			previousAmmo = AmmoInClip();
 			
 

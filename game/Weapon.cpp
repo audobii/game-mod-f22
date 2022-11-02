@@ -3379,18 +3379,34 @@ void rvWeapon::queueElement(idStr element) {
 
 		//i am very sorry for this
 		if (!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "fire")) {
-			owner->SetPlayerDmgType("fire");
+			if (owner->depleteMana(10)) {
+				owner->SetPlayerDmgType("fire");
+				//do dmg
+				owner->GiveItem("weapon_blaster");
+				Attack(true, 1, spread, 0, 0.2f);
+			}
 			//do dmg
 			gameLocal.Printf("\nFIREBALL");
 		}
 		else if (!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "ice")) {
-			owner->SetPlayerDmgType("ice");
-			//do dmg
+			if (owner->depleteMana(10)) {
+				owner->SetPlayerDmgType("ice");
+				//do dmg
+				owner->GiveItem("weapon_blaster");
+				Attack(false, 1, spread, 0, 0.2f);
+			}
 			gameLocal.Printf("\nSNOWBALL");
 		}
 		else if (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "lightning")) {
-			owner->SetPlayerDmgType("ice");
+			owner->SetPlayerDmgType("lightning");
 			//do dmg
+			if (owner->depleteMana(10)) {
+				//do dmg
+				owner->SetPlayerDmgType("rock");
+				//if this doesnt work, try clear players inventory/remove guns after every spell
+				owner->GiveItem("weapon_lightninggun");
+				Attack(false, 1, spread, 0, 1.0f);
+			}
 			gameLocal.Printf("\nLIGHTNING BOLT");
 		}
 		else if (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "rock")) {
@@ -3418,13 +3434,21 @@ void rvWeapon::queueElement(idStr element) {
 			gameLocal.Printf("\nHEALING WATER");
 		}
 		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "rock")) || (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "ice"))) {
-			owner->SetPlayerDmgType("ice");
-			//do dmg
+			if (owner->depleteMana(20)) {
+				owner->SetPlayerDmgType("ice");
+				//do dmg
+				owner->GiveItem("weapon_blaster");
+				Attack(false, 20, 3, 0, 0.2f);
+			}
 			gameLocal.Printf("\nHAIL");
 		}
 		else if ((!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "rock")) || (!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "fire"))) {
-			owner->SetPlayerDmgType("rock");
-			//do dmg
+			if (owner->depleteMana(20)) {
+				//do dmg
+				owner->SetPlayerDmgType("rock");
+				owner->GiveItem("weapon_napalmgun");
+				Attack(false, 1, spread, 0, 1.0f);
+			}
 			gameLocal.Printf("\nMETEOR");
 		}
 		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "ice"))) {

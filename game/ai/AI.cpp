@@ -142,6 +142,7 @@ idAI::idAI ( void ) {
 
 	stunned = false;
 	slowed = false;
+	burning = false;
 }
 
 /*
@@ -1207,6 +1208,8 @@ void idAI::Think( void ) {
 			// update state machine
 			UpdateStates();
 
+			//maybe check here for stunned - if stunned, dont run Move();
+			
 			// run all movement commands
 			Move();
 
@@ -1252,11 +1255,16 @@ void idAI::Think( void ) {
 
 	//status effects
 	if (stunned) {
-		StopMove(MOVE_STATUS_DONE);
+		move.moveCommand = MOVE_NONE;
 	}
 
 	if (slowed) {
 		Event_SetMoveSpeed(AIMOVESPEED_WALK);
+	}
+
+	if (burning) {
+		//DoT (hopefully)
+		AdjustHealthByDamage(1);
 	}
 
 }
