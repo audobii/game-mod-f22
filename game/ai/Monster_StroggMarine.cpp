@@ -80,8 +80,8 @@ rvMonsterStroggMarine::rvMonsterStroggMarine
 */
 rvMonsterStroggMarine::rvMonsterStroggMarine ( ) {
 	nextShootTime = 0;
-	elementResistance = "fire";
-	elementWeakness = "lightning";
+	elementResistance = "ice";
+	elementWeakness = "fire";
 	dmgType = "fire";
 }
 

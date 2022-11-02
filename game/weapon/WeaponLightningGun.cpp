@@ -319,12 +319,12 @@ void rvWeaponLightningGun::Think ( void ) {
 		
 		nextAttackTime = gameLocal.time + (fireRate * owner->PowerUpModifier ( PMOD_FIRERATE ));
 		//gameLocal.Printf("\nqueueing element - " + weaponElementType);
-		//Attack ( currentPath.target, dir, power );
-		/*
+		Attack ( currentPath.target, dir, power );
+		
 		for ( i = 0; i < chainLightning.Num(); i ++, power *= 0.75f ) {
 			Attack ( chainLightning[i].target, chainLightning[i].normal, power );
 		}
-		*/
+		
 
 		statManager->WeaponFired( owner, owner->GetCurrentWeapon(), chainLightning.Num() + 1 );
 	}
@@ -840,7 +840,7 @@ stateResult_t rvWeaponLightningGun::State_Fire( const stateParms_t& parms ) {
 			PlayAnim( ANIMCHANNEL_ALL, "shoot_start", parms.blendFrames );
 			*/
 
-			queueElement(weaponElementType);
+			//queueElement(weaponElementType);
 			return SRESULT_STAGE( STAGE_ATTACKLOOP );
 		
 		case STAGE_ATTACKLOOP:

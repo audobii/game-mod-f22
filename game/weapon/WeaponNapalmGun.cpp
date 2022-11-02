@@ -420,7 +420,7 @@ stateResult_t WeaponNapalmGun::State_Fire( const stateParms_t& parms ) {
 			
 
 			//gameLocal.Printf("\nqueueing element - " + weaponElementType);
-			queueElement(weaponElementType);
+			//queueElement(weaponElementType);
 
 			return SRESULT_STAGE ( STAGE_WAIT );
 	

@@ -3366,16 +3366,42 @@ void rvWeapon::queueElement(idStr element) {
 
 	if (!idStr::Icmp(firstElement, "")) { //nothing in queue
 		owner->UpdateSpellQueueGui("clear");
-		owner->UpdateSpellQueueGui("first");
+
+		if (!idStr::Icmp(element, "fire")) {
+			owner->UpdateSpellQueueGui("first_fire");
+		}
+		if (!idStr::Icmp(element, "ice")) {
+			owner->UpdateSpellQueueGui("first_ice");
+		}
+		if (!idStr::Icmp(element, "rock")) {
+			owner->UpdateSpellQueueGui("first_rock");
+		}
+		if (!idStr::Icmp(element, "lightning")) {
+			owner->UpdateSpellQueueGui("first_lightning");
+		}
 
 		owner->SetFirstElement(element);
+		//owner->inventory.Clear();
+		owner->inventory.weapons = 0;
 
-		gameLocal.Printf("\nqueueing 1st element! - " + firstElement);
+		gameLocal.Printf("\nqueueing 1st element! - " + element);
 	}
 	else if(currMana > 0) { //something in queue - cast spell if mana available
-		owner->UpdateSpellQueueGui("second");
 		
 		idStr secondElement = element;
+
+		if (!idStr::Icmp(secondElement, "fire")) {
+			owner->UpdateSpellQueueGui("second_fire");
+		}
+		if (!idStr::Icmp(secondElement, "ice")) {
+			owner->UpdateSpellQueueGui("second_ice");
+		}
+		if (!idStr::Icmp(secondElement, "rock")) {
+			owner->UpdateSpellQueueGui("second_rock");
+		}
+		if (!idStr::Icmp(secondElement, "lightning")) {
+			owner->UpdateSpellQueueGui("second_lightning");
+		}
 
 		//i am very sorry for this
 		if (!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "fire")) {
@@ -3393,7 +3419,12 @@ void rvWeapon::queueElement(idStr element) {
 				owner->SetPlayerDmgType("ice");
 				//do dmg
 				owner->GiveItem("weapon_blaster");
-				Attack(false, 1, spread, 0, 0.2f);
+				if (!idStr::Icmp(currElementBoost, "ice")) {
+					Attack(false, 1, spread, 0, 0.8f);
+				}
+				else {
+					Attack(false, 1, spread, 0, 0.2f);
+				}
 			}
 			gameLocal.Printf("\nSNOWBALL");
 		}
@@ -3446,24 +3477,34 @@ void rvWeapon::queueElement(idStr element) {
 			if (owner->depleteMana(20)) {
 				//do dmg
 				owner->SetPlayerDmgType("rock");
-				owner->GiveItem("weapon_napalmgun");
+				//owner->GiveItem("weapon_napalmgun");
+				//Attack(false, 1, spread, 0, 1.0f);
+				spawnMagicProjectile("projectile_napalm");
 				Attack(false, 1, spread, 0, 1.0f);
 			}
 			gameLocal.Printf("\nMETEOR");
 		}
 		else if ((!idStr::Icmp(firstElement, "ice") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "ice"))) {
-			owner->SetPlayerDmgType("lightning");
-			//do dmg
+			if (owner->depleteMana(20)) {
+				owner->SetPlayerDmgType("lightning");
+				//do dmg
+			}
 			gameLocal.Printf("\nSTORM (PUSH)");
 		}
 		else if ((!idStr::Icmp(firstElement, "fire") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "fire"))) {
-			owner->SetPlayerDmgType("fire");
-			//do dmg
+			if (owner->depleteMana(20)) {
+				owner->SetPlayerDmgType("fire");
+				//do dmg
+				owner->GiveItem("weapon_grenadelauncher");
+				Attack(false, 1, spread, 0, 1.0f);
+			}
 			gameLocal.Printf("\nBOOMBOOM");
 		} 
 		else if ((!idStr::Icmp(firstElement, "rock") && !idStr::Icmp(secondElement, "lightning")) || (!idStr::Icmp(firstElement, "lightning") && !idStr::Icmp(secondElement, "rock"))) {
-			//pull
-			gameLocal.Printf("\nMAGNET (PULL)");
+			if (owner->depleteMana(20)) {
+				//pull
+				gameLocal.Printf("\nMAGNET (PULL)");
+			}
 		}
 
 		gameLocal.Printf("\ncasting spell, 2nd element is " + secondElement);
@@ -3477,5 +3518,157 @@ void rvWeapon::queueElement(idStr element) {
 	//animation - ur gonna have to just copy the code and apply it to here. maybe make functions for the effects u want
 	//damage - drill down from Attack() --> Projectile --> Damage() ...follow this logic and implement here. maybe call them directly under the spells
 
+}
+
+//copied from spawn cmd in syscmds
+void rvWeapon::spawnMagicProjectile(idStr proj_type) {
+	const char* key, * value;
+	int			i;
+	float		yaw;
+	idVec3		org;
+	idPlayer* player;
+	idDict		dict;
+
+	value = proj_type;
+	dict.Set("classname", value);
+	dict.Set("angle", va("%f", yaw + 180));
+
+	org = owner->GetPhysics()->GetOrigin() + idAngles(0, yaw, 0).ToForward() * 80 + idVec3(0, 0, 1);
+	dict.Set("origin", org.ToString());
+
+	/*
+	for (i = 2; i < args.Argc() - 1; i += 2) {
+
+		key = args.Argv(i);
+		value = args.Argv(i + 1);
+
+		dict.Set(key, value);
+	}*/
+
+	// RAVEN BEGIN
+	// kfuller: want to know the name of the entity I spawned
+	idEntity* newEnt = NULL;
+	gameLocal.SpawnEntityDef(dict, &newEnt);
+}
+
+void rvWeapon::launchMagic() {
+	idVec3 muzzleOrigin;
+	idMat3 muzzleAxis;
+	bool altAttack = false;
+	int num_attacks = 1; 
+	float spread = 3; 
+	float fuseOffset = 0;
+	float power = 1.0f;
+	
+	if ( !viewModel ) {
+		common->Warning( "NULL viewmodel %s\n", __FUNCTION__ );
+		return;
+	}
+	
+	if ( viewModel->IsHidden() ) {
+		return;
+	}
+
+	// avoid all ammo considerations on an MP client
+	if ( !gameLocal.isClient ) {
+		// check if we're out of ammo or the clip is empty
+		int ammoAvail = owner->inventory.HasAmmo( ammoType, ammoRequired );
+		if ( !ammoAvail || ( ( clipSize != 0 ) && ( ammoClip <= 0 ) ) ) {
+			return;
+		}
+
+		owner->inventory.UseAmmo( ammoType, ammoRequired );
+		if ( clipSize && ammoRequired ) {
+ 			clipPredictTime = gameLocal.time;	// mp client: we predict this. mark time so we're not confused by snapshots
+
+			//currentMana -= 10;
+			//ammoClip = currentMana;
+			ammoClip -= 10;
+		}
+
+		// wake up nearby monsters
+		if ( !wfl.silent_fire ) {
+			gameLocal.AlertAI( owner );
+		}
+	}
+
+	// set the shader parm to the time of last projectile firing,
+	// which the gun material shaders can reference for single shot barrel glows, etc
+	viewModel->SetShaderParm ( SHADERPARM_DIVERSITY, gameLocal.random.CRandomFloat() );
+	viewModel->SetShaderParm ( SHADERPARM_TIMEOFFSET, -MS2SEC( gameLocal.realClientTime ) );
+
+	if ( worldModel.GetEntity() ) {
+		worldModel->SetShaderParm( SHADERPARM_DIVERSITY, viewModel->GetRenderEntity()->shaderParms[ SHADERPARM_DIVERSITY ] );
+		worldModel->SetShaderParm( SHADERPARM_TIMEOFFSET, viewModel->GetRenderEntity()->shaderParms[ SHADERPARM_TIMEOFFSET ] );
+	}
+
+	// calculate the muzzle position
+	if ( barrelJointView != INVALID_JOINT && spawnArgs.GetBool( "launchFromBarrel" ) ) {
+		// there is an explicit joint for the muzzle
+		GetGlobalJointTransform( true, barrelJointView, muzzleOrigin, muzzleAxis );
+	} else {
+		// go straight out of the view
+		muzzleOrigin = playerViewOrigin;
+		muzzleAxis = playerViewAxis;		
+		muzzleOrigin += playerViewAxis[0] * muzzleOffset;
+	}
+
+	// add some to the kick time, incrementally moving repeat firing weapons back
+	if ( kick_endtime < gameLocal.realClientTime ) {
+		kick_endtime = gameLocal.realClientTime;
+	}
+	kick_endtime += muzzle_kick_time;
+	if ( kick_endtime > gameLocal.realClientTime + muzzle_kick_maxtime ) {
+		kick_endtime = gameLocal.realClientTime + muzzle_kick_maxtime;
+	}
+
+	// add the muzzleflash
+	MuzzleFlash();
+
+	// quad damage overlays a sound
+	if ( owner->PowerUpActive( POWERUP_QUADDAMAGE ) ) {
+		viewModel->StartSound( "snd_quaddamage", SND_CHANNEL_VOICE, 0, false, NULL );
+	}
+
+	// Muzzle flash effect
+	bool muzzleTint = spawnArgs.GetBool( "muzzleTint" );
+	viewModel->PlayEffect( "fx_muzzleflash", flashJointView, false, vec3_origin, false, EC_IGNORE, muzzleTint ? owner->GetHitscanTint() : vec4_one );
+
+	if ( worldModel && flashJointWorld != INVALID_JOINT ) {
+		worldModel->PlayEffect( gameLocal.GetEffect( weaponDef->dict, "fx_muzzleflash_world" ), flashJointWorld, vec3_origin, mat3_identity, false, vec3_origin, false, EC_IGNORE, muzzleTint ? owner->GetHitscanTint() : vec4_one );
+	}
+
+	owner->WeaponFireFeedback( &weaponDef->dict );
+
+	// Inform the gui of the ammo change
+	viewModel->PostGUIEvent ( "weapon_ammo" );
+	if ( ammoClip == 0 && AmmoAvailable() == 0 ) {
+		viewModel->PostGUIEvent ( "weapon_noammo" );
+	}
+	
+	// The attack is either a hitscan or a launched projectile, do that now.
+	//this runs when you shoot with a weapon
+	if ( !gameLocal.isClient ) {
+		idDict& dict = altAttack ? attackAltDict : attackDict;
+
+		//idStr playerElementRes = owner->playerElementResistance;
+		//idStr playerElementWk = owner->playerElementWeakness;
+
+		/*
+		gameLocal.Printf("this weapon's element type is: \n");
+		gameLocal.Printf(weaponElementType);
+		gameLocal.Printf("\n");
+		*/
+
+		power *= owner->PowerUpModifier( PMOD_PROJECTILE_DAMAGE );
+		if ( altAttack ? wfl.attackAltHitscan : wfl.attackHitscan ) {
+			Hitscan( dict, muzzleOrigin, muzzleAxis, num_attacks, spread, power );
+		} else {
+			LaunchProjectiles( dict, muzzleOrigin, muzzleAxis, num_attacks, spread, fuseOffset, power );
+		}
+		//asalmon:  changed to keep stats even in single player 
+		statManager->WeaponFired( owner, weaponIndex, num_attacks );
+		
+	}
 }
 

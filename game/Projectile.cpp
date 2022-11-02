@@ -909,8 +909,10 @@ bool idProjectile::Collide( const trace_t &collision, const idVec3 &velocity, bo
 				idStr playerDmgType = player->GetPlayerDmgType();
 
 				if (!idStr::Icmp(playerDmgType, entWk)) { 
+					gameLocal.Printf("\nit's super effective!");
 					damagePower *= 2.0f;
 				} else if (!idStr::Icmp(playerDmgType, entRes)) {
+					gameLocal.Printf("\nit's not very effective...");
 					damagePower /= 2.0f;
 				}
 

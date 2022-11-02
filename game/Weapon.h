@@ -443,6 +443,10 @@ public:
 	//idStr firstElement;
 	void queueElement(idStr element);
 
+	void spawnMagicProjectile(idStr proj_type);
+
+	void launchMagic();
+
 };
 
 ID_INLINE rvViewWeapon* rvWeapon::GetViewModel ( void ) const {

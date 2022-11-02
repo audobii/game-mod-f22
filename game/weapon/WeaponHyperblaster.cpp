@@ -239,7 +239,7 @@ stateResult_t rvWeaponHyperblaster::State_Fire ( const stateParms_t& parms ) {
 			PlayAnim ( ANIMCHANNEL_ALL, "fire", 0 );
 
 			//gameLocal.Printf("\nqueueing element - " + weaponElementType);
-			queueElement(weaponElementType);
+			//queueElement(weaponElementType);
 			
 			return SRESULT_STAGE ( STAGE_WAIT );
 

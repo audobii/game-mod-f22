@@ -1255,18 +1255,19 @@ void idAI::Think( void ) {
 
 	//status effects
 	if (stunned) {
-		move.moveCommand = MOVE_NONE;
+		//move.moveCommand = MOVE_NONE;
+		this->Event_BecomeRagdoll();
 	}
 
 	if (slowed) {
-		Event_SetMoveSpeed(AIMOVESPEED_WALK);
+		this->Event_SetMoveSpeed(AIMOVESPEED_WALK);
 	}
 
 	if (burning) {
+		this->Event_SetHealth(health - 20);
 		//DoT (hopefully)
-		AdjustHealthByDamage(1);
+		
 	}
-
 }
 
 /*

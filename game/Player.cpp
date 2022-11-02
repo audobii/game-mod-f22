@@ -14115,12 +14115,30 @@ void idPlayer::UpdateSpellQueueGui(idStr update) {
 
 
 	if (hud) {
-
-		if (!idStr::Icmp(update, "first")) {
-			hud->HandleNamedEvent("queueFirstSpell");
+		//sorry again for this code
+		if (!idStr::Icmp(update, "first_ice")) {
+			hud->HandleNamedEvent("queueFirstSpellIce");
 		}
-		else if (!idStr::Icmp(update, "second")) {
-			hud->HandleNamedEvent("queueSecondSpell");
+		else if (!idStr::Icmp(update, "second_ice")) {
+			hud->HandleNamedEvent("queueSecondSpellIce");
+		}
+		if (!idStr::Icmp(update, "first_fire")) {
+			hud->HandleNamedEvent("queueFirstSpellFire");
+		}
+		else if (!idStr::Icmp(update, "second_fire")) {
+			hud->HandleNamedEvent("queueSecondSpellFire");
+		}
+		if (!idStr::Icmp(update, "first_rock")) {
+			hud->HandleNamedEvent("queueFirstSpellRock");
+		}
+		else if (!idStr::Icmp(update, "second_rock")) {
+			hud->HandleNamedEvent("queueSecondSpellRock");
+		}
+		if (!idStr::Icmp(update, "first_lightning")) {
+			hud->HandleNamedEvent("queueFirstSpellLightning");
+		}
+		else if (!idStr::Icmp(update, "second_lightning")) {
+			hud->HandleNamedEvent("queueSecondSpellLightning");
 		}
 		else if (!idStr::Icmp(update, "clear")) {
 			hud->HandleNamedEvent("clearSpellQueue");

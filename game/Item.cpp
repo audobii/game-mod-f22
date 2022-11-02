@@ -990,7 +990,7 @@ idItem::Event_Touch
 ================
 */
 void idItem::Event_Touch( idEntity *other, trace_t *trace ) {
-	gameLocal.Printf("\nitem is touched");
+	//gameLocal.Printf("\nitem is touched");
 
 // RAVEN BEGIN
 // jnewquist: Use accessor for static class type 
